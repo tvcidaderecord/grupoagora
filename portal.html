@@ -483,11 +483,13 @@ function selectCity(cityKey) {
 function goDownloads(station) {
   // Remove # from logoBg so it doesn't break the URL hash
   var safeBg = station.logoBg.replace('#', '');
+  // Passa o logo base64 via sessionStorage para não inflar a URL
+  var logoData = LOGOS[station.logo] || LOGOS.jp;
+  try { sessionStorage.setItem('dl_logo', logoData); } catch(e) {}
   var p = new URLSearchParams({
     name:   station.name,
     sub:    station.sub,
     folder: station.folder,
-    logo:   station.logo,
     logoBg: safeBg,
     theme:  station.theme,
     city:   currentCity
