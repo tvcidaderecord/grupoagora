@@ -147,8 +147,8 @@
 </div>
 
 <main>
-  <div id="loader"><div class="spinner"></div><p>Carregando arquivos…</p></div>
-  <div id="msgBox"><div class="mi" id="msgIcon">📭</div><h3 id="msgTitle">Nenhum arquivo</h3><p id="msgText">Pasta vazia ou sem PDFs.</p></div>
+  <div id="loader"><div class="spinner"></div><p>Carregando arquivos…</p><p id="loaderDebug" style="font-size:11px;color:#555;margin-top:8px;font-family:monospace"></p></div>
+  <div id="msgBox"><div class="mi" id="msgIcon">📭</div><h3 id="msgTitle">Nenhum arquivo</h3><div id="msgText" style="font-size:13px;color:#555;max-width:400px;margin:0 auto;line-height:1.7">Pasta vazia ou sem PDFs.</div></div>
   <div id="fileGrid" role="list"></div>
 </main>
 
@@ -207,6 +207,10 @@
     var logoWrap = document.getElementById('logoWrap');
     logoWrap.style.background = logoBg;
     document.getElementById('logoImg').src = LOGOS[logoKey] || LOGOS.jp;
+
+    /* Mostra folder ID no loader para debug */
+    var dbg = document.getElementById('loaderDebug');
+    if (dbg) { dbg.textContent = 'Pasta: ' + (folderId ? folderId.substring(0,12)+'...' : 'NÃO RECEBIDA'); }
 
     fetchFiles();
   }
@@ -290,50 +294,83 @@
 
     if (!folderId) {
       loader.style.display = 'none';
-      document.getElementById('msgIcon').textContent  = '⚙️';
-      document.getElementById('msgTitle').textContent = 'Pasta não configurada';
-      document.getElementById('msgText').textContent  = 'Nenhum ID de pasta foi fornecido.';
-      msg.style.display = 'block'; return;
+      showError('⚙️', 'Pasta não configurada',
+        'Nenhum ID de pasta foi recebido. URL: ' + window.location.href.substring(0,120));
+      return;
     }
 
-    var q      = encodeURIComponent("'" + folderId + "' in parents and mimeType='application/pdf' and trashed=false");
-    var fields = encodeURIComponent('files(id,name,modifiedTime),nextPageToken');
-    var order  = encodeURIComponent('modifiedTime desc');
+    var q      = encodeURIComponent("'" + folderId + "' in parents and trashed=false");
+    var fields = encodeURIComponent('nextPageToken,files(id,name,modifiedTime,mimeType)');
+    var order  = encodeURIComponent('name');
     var fetched = [], pageToken = '';
 
     try {
       do {
-        var url = 'https://www.googleapis.com/drive/v3/files?q=' + q + '&fields=' + fields + '&orderBy=' + order + '&pageSize=200&key=' + API_KEY;
+        var url = 'https://www.googleapis.com/drive/v3/files?q=' + q
+                + '&fields=' + fields
+                + '&orderBy=' + order
+                + '&pageSize=200'
+                + '&key=' + API_KEY;
         if (pageToken) url += '&pageToken=' + encodeURIComponent(pageToken);
-        var resp = await fetch(url);
+
+        var resp = await fetch(url, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+
         if (!resp.ok) {
-          var err = await resp.json().catch(function(){return{}});
-          throw new Error((err.error && err.error.message) || 'Erro HTTP ' + resp.status);
+          var errBody = '';
+          try { var errJson = await resp.json(); errBody = (errJson.error && errJson.error.message) || JSON.stringify(errJson); }
+          catch(e) { errBody = await resp.text().catch(function(){return '';}); }
+          throw new Error('HTTP ' + resp.status + ': ' + errBody);
         }
+
         var data = await resp.json();
         fetched  = fetched.concat(data.files || []);
         pageToken = data.nextPageToken || '';
       } while (pageToken);
 
-      allFiles = fetched;
+      /* Filtra só PDFs (caso a query não filtre por mimeType) */
+      var pdfs = fetched.filter(function(f){
+        return f.mimeType === 'application/pdf' || (f.name && f.name.toLowerCase().endsWith('.pdf'));
+      });
+
+      allFiles = pdfs;
       document.getElementById('fileCount').textContent = allFiles.length;
       loader.style.display = 'none';
 
       if (allFiles.length === 0) {
-        document.getElementById('msgIcon').textContent  = '📭';
-        document.getElementById('msgTitle').textContent = 'Nenhum arquivo encontrado';
-        document.getElementById('msgText').textContent  = 'Esta pasta não contém PDFs ou não está pública.';
-        msg.style.display = 'block'; return;
+        showError('📭', 'Nenhum PDF encontrado',
+          'A pasta existe e foi acessada (' + fetched.length + ' arquivo(s) total), mas nenhum PDF foi encontrado. '
+          + 'Verifique se os arquivos são PDFs e se a pasta está compartilhada publicamente.<br><br>'
+          + '<a href="https://drive.google.com/drive/folders/' + folderId + '" target="_blank" '
+          + 'style="color:var(--primary)">🔗 Abrir pasta no Drive</a>');
+        return;
       }
       renderFiles(allFiles);
+
     } catch(err) {
-      console.error(err);
+      console.error('fetchFiles error:', err);
       loader.style.display = 'none';
-      document.getElementById('msgIcon').textContent  = '⚠️';
-      document.getElementById('msgTitle').textContent = 'Erro ao carregar';
-      document.getElementById('msgText').textContent  = err.message + '. Verifique a API Key e se a pasta é pública.';
-      msg.style.display = 'block';
+      showError('⚠️', 'Erro ao carregar arquivos',
+        '<b>Detalhes:</b> ' + err.message
+        + '<br><br><b>Pasta ID:</b> ' + folderId
+        + '<br><b>API Key:</b> ' + API_KEY.substring(0,12) + '...'
+        + '<br><br>Possíveis causas:<br>'
+        + '• API Key com restrição de domínio incorreta<br>'
+        + '• Pasta não compartilhada como pública<br>'
+        + '• Drive API não habilitada no projeto<br><br>'
+        + '<a href="https://drive.google.com/drive/folders/' + folderId + '" target="_blank" '
+        + 'style="color:var(--primary)">🔗 Abrir pasta diretamente no Drive</a>');
     }
+  }
+
+  function showError(icon, title, html) {
+    document.getElementById('msgIcon').textContent  = icon;
+    document.getElementById('msgTitle').textContent = title;
+    var textEl = document.getElementById('msgText');
+    textEl.innerHTML = html;
+    document.getElementById('msgBox').style.display = 'block';
   }
 
   init();

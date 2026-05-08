@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Diagnóstico – Google Drive API</title>
+<style>
+  body { font-family: monospace; background: #0a0a0a; color: #ccc; padding: 30px; max-width: 800px; margin: 0 auto; }
+  h2 { color: #fff; }
+  .ok   { color: #4caf50; }
+  .erro { color: #f44336; }
+  .info { color: #888; }
+  .warn { color: #ff9800; }
+  pre  { background: #111; padding: 14px; border-radius: 6px; overflow-x: auto; font-size:12px; white-space: pre-wrap; word-break: break-all; }
+  button { background: #1a73e8; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; cursor: pointer; margin: 6px 4px; }
+  button:hover { background: #1558b0; }
+  .card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 16px; margin: 12px 0; }
+  select, input { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<h2>🔍 Diagnóstico – Google Drive API</h2>
+<p class="info">Esta página testa se a API Key e as pastas do Drive estão funcionando corretamente.</p>
+
+<div class="card">
+  <b>API Key:</b><br>
+  <input type="text" id="apiKey" value="AIzaSyDZyXSTkryWfoVP4-QSLlB3SiZK8-wsvKU">
+  <b>Pasta para testar:</b><br>
+  <select id="folderSelect">
+    <option value="1HoQdk1A-00VbOtuNXvJrqJ8S_Xn593NN">ROO – Agora FM</option>
+    <option value="1iaomV55ZEJrDPaLtwGw1JQdPzbiOjzg4">ROO – Jovem Pan</option>
+    <option value="1V2vUnY2Ck4v3XIG6tkLiMI22snuA-XWk">ROO – TV Cidade</option>
+    <option value="1MymIVUISw3zAjfJNt_rVmt7uHEGZWMQD">ROO – AGORA MT</option>
+    <option value="1W3kdhTZVOc5yZMxNDfJMo15c6rJPKfV6">PVA – TV Primavera</option>
+    <option value="1b7MBjEJOmSNyumfYuUt0ns6Wxj29wZlV">PVA – AGORA MT</option>
+    <option value="100L5Xlv5i0WlwAiEZIbTAw2WxfSS1lIo">PVA – Rádio Primavera</option>
+    <option value="1n_oU4xjhGP2QsCsOVKP-mDFfYjexk4aU">BGA – AGORA MT</option>
+    <option value="1AuAXeS6CXFCakuB2I1RJSmqlj2YebwFr">BGA – Jovem Pan</option>
+    <option value="1e4u8BGLDTXp--_oPU6hGQYVwvlhHvZFx">BGA – TV Cidade Record</option>
+    <option value="1_yXSdmArFmOj6y2lcDtcDa-alconnYpr">TGA – TV Vale Record</option>
+    <option value="1LepXxUoJod9hV6tlBdP3xQYiYoo2bTBI">TGA – AGORA MT</option>
+  </select>
+  <button onclick="testarAPI()">▶ Testar API</button>
+  <button onclick="testarTodas()">▶ Testar TODAS as pastas</button>
+</div>
+
+<div id="resultado"></div>
+
+<script>
+var log = '';
+
+function add(classe, texto) {
+  log += '<span class="' + classe + '">' + texto + '</span>\n';
+  document.getElementById('resultado').innerHTML = '<pre>' + log + '</pre>';
+}
+
+async function testarAPI() {
+  var apiKey = document.getElementById('apiKey').value.trim();
+  var folderId = document.getElementById('folderSelect').value;
+  var nome = document.getElementById('folderSelect').options[document.getElementById('folderSelect').selectedIndex].text;
+
+  log = '';
+  add('info', '=== DIAGNÓSTICO DRIVE API ===');
+  add('info', 'URL atual: ' + window.location.href);
+  add('info', 'API Key:   ' + apiKey.substring(0,15) + '...');
+  add('info', 'Pasta:     ' + nome + ' (' + folderId + ')');
+  add('info', '');
+
+  var q      = encodeURIComponent("'" + folderId + "' in parents and trashed=false");
+  var fields = encodeURIComponent('nextPageToken,files(id,name,modifiedTime,mimeType)');
+  var url    = 'https://www.googleapis.com/drive/v3/files?q=' + q + '&fields=' + fields + '&orderBy=name&pageSize=50&key=' + apiKey;
+
+  add('info', 'URL da requisição:');
+  add('info', url.substring(0, 120) + '...');
+  add('info', '');
+  add('info', 'Fazendo requisição...');
+
+  try {
+    var resp = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+    add('info', 'Status HTTP: ' + resp.status + ' ' + resp.statusText);
+
+    var data = await resp.json();
+
+    if (!resp.ok) {
+      add('erro', '❌ ERRO DA API:');
+      add('erro', JSON.stringify(data, null, 2));
+
+      if (resp.status === 403) {
+        add('warn', '');
+        add('warn', '⚠️ POSSÍVEIS CAUSAS DO 403:');
+        add('warn', '1. API Key com restrição de HTTP Referrer – domínio desta página não está na lista');
+        add('warn', '2. Google Drive API não está ATIVADA no projeto Google Cloud');
+        add('warn', '3. API Key inválida ou expirada');
+        add('warn', '');
+        add('warn', 'SOLUÇÃO: Acesse console.cloud.google.com → Credenciais → sua API Key');
+        add('warn', 'E adicione este domínio nas referências permitidas, ou REMOVA a restrição.');
+      }
+      return;
+    }
+
+    var files = data.files || [];
+    add('ok', '✅ SUCESSO! ' + files.length + ' arquivo(s) encontrado(s) na pasta.');
+    add('info', '');
+
+    if (files.length === 0) {
+      add('warn', '⚠️ A pasta existe e está acessível, mas está vazia ou sem PDFs.');
+    } else {
+      var pdfs = files.filter(function(f){ return f.mimeType === 'application/pdf' || f.name.endsWith('.pdf'); });
+      var outros = files.filter(function(f){ return f.mimeType !== 'application/pdf' && !f.name.endsWith('.pdf'); });
+
+      add('ok', 'PDFs: ' + pdfs.length);
+      if (outros.length) add('warn', 'Outros tipos: ' + outros.length + ' (serão filtrados)');
+      add('info', '');
+      add('info', 'Arquivos encontrados:');
+
+      files.slice(0, 10).forEach(function(f, i) {
+        var isPdf = f.mimeType === 'application/pdf' || f.name.endsWith('.pdf');
+        add(isPdf ? 'ok' : 'warn', '  ' + (i+1) + '. [' + (isPdf?'PDF':'OUTRO') + '] ' + f.name);
+      });
+      if (files.length > 10) add('info', '  ... e mais ' + (files.length - 10) + ' arquivo(s)');
+    }
+
+  } catch(err) {
+    add('erro', '❌ EXCEÇÃO: ' + err.message);
+    add('warn', 'Isso pode indicar bloqueio de CORS ou rede.');
+  }
+}
+
+async function testarTodas() {
+  var apiKey = document.getElementById('apiKey').value.trim();
+  var select = document.getElementById('folderSelect');
+  log = '';
+  add('info', '=== TESTANDO TODAS AS PASTAS ===\n');
+
+  for (var i = 0; i < select.options.length; i++) {
+    var folderId = select.options[i].value;
+    var nome = select.options[i].text;
+
+    var q      = encodeURIComponent("'" + folderId + "' in parents and trashed=false");
+    var fields = encodeURIComponent('files(id,name,mimeType)');
+    var url    = 'https://www.googleapis.com/drive/v3/files?q=' + q + '&fields=' + fields + '&pageSize=200&key=' + apiKey;
+
+    try {
+      var resp  = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      var data  = await resp.json();
+      if (resp.ok) {
+        var pdfs = (data.files||[]).filter(function(f){ return f.mimeType==='application/pdf'||f.name.endsWith('.pdf'); });
+        var total = (data.files||[]).length;
+        add('ok', '✅ ' + nome + ': ' + pdfs.length + ' PDFs (' + total + ' total)');
+      } else {
+        var msg = (data.error && data.error.message) || 'Erro ' + resp.status;
+        add('erro', '❌ ' + nome + ': ' + msg);
+      }
+    } catch(e) {
+      add('erro', '❌ ' + nome + ': ' + e.message);
+    }
+  }
+  add('info', '\n=== FIM DO TESTE ===');
+}
+</script>
+</body>
+</html>
