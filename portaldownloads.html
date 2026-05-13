@@ -100,40 +100,54 @@
   .map-wrapper {
     position: relative;
     width: 100%;
-    max-width: 700px;
+    max-width: 520px;
     margin: 0 auto;
   }
 
-  .map-wrapper svg {
+  .map-container {
+    position: relative;
     width: 100%;
-    height: auto;
-    filter: drop-shadow(0 0 40px rgba(232,0,29,0.15));
+    user-select: none;
+    -webkit-user-select: none;
   }
 
-  /* MT state path */
-  .mt-path {
-    fill: #1a1a1a;
-    stroke: #444;
-    stroke-width: 1.5;
-    transition: fill 0.3s;
+  .mt-map-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Invert: white bg becomes dark, black shape becomes light */
+    filter: invert(1) brightness(0.18) sepia(1) hue-rotate(320deg) saturate(3);
+    filter: invert(0.85) brightness(0.35) sepia(0.4) saturate(2) hue-rotate(330deg);
+    /* Simple: make the black MT shape a dark red-tinted color */
+    filter: brightness(0.22) sepia(1) saturate(3) hue-rotate(310deg);
+  }
+
+  .mt-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
   }
 
   /* City dot + label */
   .city-group {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .city-group .city-dot {
     fill: var(--red);
-    stroke: var(--accent);
+    stroke: #ff6680;
     stroke-width: 2;
-    r: 8;
+    r: 9;
     transition: r 0.2s, fill 0.2s;
     filter: drop-shadow(0 0 6px var(--red));
   }
 
-  .city-group:hover .city-dot {
-    r: 12;
+  .city-group:hover .city-dot,
+  .city-group:active .city-dot {
+    r: 13;
     fill: var(--gold);
     filter: drop-shadow(0 0 12px var(--gold));
   }
@@ -141,42 +155,49 @@
   .city-group .city-label {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 13px;
-    font-weight: 600;
-    fill: var(--text);
-    letter-spacing: 1px;
+    font-weight: 700;
+    fill: #ffffff;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     pointer-events: none;
-    transition: fill 0.2s;
+    paint-order: stroke fill;
+    stroke: rgba(0,0,0,0.6);
+    stroke-width: 3px;
+    stroke-linejoin: round;
   }
 
-  .city-group:hover .city-label {
+  .city-group:hover .city-label,
+  .city-group:active .city-label {
     fill: var(--gold);
   }
 
   .city-group .city-count {
     font-family: 'Barlow', sans-serif;
     font-size: 10px;
-    fill: var(--muted);
+    fill: rgba(255,255,255,0.75);
     pointer-events: none;
+    paint-order: stroke fill;
+    stroke: rgba(0,0,0,0.5);
+    stroke-width: 2px;
   }
 
   /* ── PULSE ANIMATION ── */
   .pulse-ring {
     fill: none;
     stroke: var(--red);
-    stroke-width: 1;
+    stroke-width: 1.5;
     opacity: 0;
     animation: pulse 2.5s ease-out infinite;
   }
 
-  .city-group:nth-child(2) .pulse-ring { animation-delay: 0s; }
-  .city-group:nth-child(3) .pulse-ring { animation-delay: 0.6s; }
-  .city-group:nth-child(4) .pulse-ring { animation-delay: 1.2s; }
-  .city-group:nth-child(5) .pulse-ring { animation-delay: 1.8s; }
+  .city-group:nth-child(1) .pulse-ring { animation-delay: 0s; }
+  .city-group:nth-child(2) .pulse-ring { animation-delay: 0.6s; }
+  .city-group:nth-child(3) .pulse-ring { animation-delay: 1.2s; }
+  .city-group:nth-child(4) .pulse-ring { animation-delay: 1.8s; }
 
   @keyframes pulse {
-    0%   { r: 8; opacity: 0.8; }
-    100% { r: 28; opacity: 0; }
+    0%   { r: 9;  opacity: 0.9; }
+    100% { r: 30; opacity: 0;   }
   }
 
   /* ── OVERLAY PANELS ── */
@@ -484,18 +505,34 @@
     text-transform: uppercase;
   }
 
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    header { padding: 0 16px; height: 56px; }
+    .logo-text { font-size: 18px; letter-spacing: 1px; }
+    .header-tag { display: none; }
+    .hero { padding: 20px 12px 32px; }
+    .hero-logo img { width: 160px; }
+    .hero-sub { font-size: 11px; letter-spacing: 3px; margin-bottom: 24px; }
+    .map-wrapper { max-width: 100%; }
+    .bottom-hint { font-size: 10px; letter-spacing: 2px; }
+    .panel { border-radius: 16px 16px 0 0; max-height: 92vh; }
+    .overlay { align-items: flex-end; padding: 0; }
+    .panel-header { padding: 16px 16px; }
+    .panel-body { padding: 14px 14px 28px; }
+    .emissora-card { padding: 14px 14px; }
+    .emissora-name { font-size: 15px; }
+    .file-card { padding: 12px 14px; gap: 10px; }
+    .file-actions { gap: 6px; }
+    .btn { padding: 7px 10px; font-size: 11px; }
+    .city-group .city-label { font-size: 11px; }
+    .city-group .city-count { font-size: 9px; }
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--dark); }
   ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--red); }
-
-  @media (max-width: 480px) {
-    header { padding: 0 20px; }
-    .file-actions { width: 100%; justify-content: flex-end; }
-    .panel-body { padding: 16px 16px 24px; }
-    .panel-header { padding: 18px 16px; }
-  }
 </style>
 </head>
 <body>
@@ -514,85 +551,45 @@
     <p class="hero-sub">Selecione uma cidade no mapa</p>
 
     <div class="map-wrapper">
-      <!-- Simplified Mato Grosso SVG map with city markers -->
+      <!-- Mato Grosso real map with city markers -->
+      <div class="map-container">
+        <img src="data:image/png;base64,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" alt="Mapa Mato Grosso" class="mt-map-img"/>
+        <svg class="mt-overlay" viewBox="0 0 440 420" xmlns="http://www.w3.org/2000/svg" id="mt-map">
 
-      <svg viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" id="mt-map">
-        <!-- Mato Grosso state outline (simplified) -->
-        <path class="mt-path" d="
-          M 80,30
-          L 420,30
-          L 450,50
-          L 470,90
-          L 470,160
-          L 460,200
-          L 470,240
-          L 460,280
-          L 450,320
-          L 440,360
-          L 420,400
-          L 390,430
-          L 360,450
-          L 330,460
-          L 290,470
-          L 250,480
-          L 210,475
-          L 170,460
-          L 130,440
-          L 100,410
-          L 70,380
-          L 50,340
-          L 40,300
-          L 35,260
-          L 40,220
-          L 35,180
-          L 40,140
-          L 50,100
-          L 60,70
-          Z
-        "/>
+          <!-- ── CITY: Rondonópolis (sul-leste) ── -->
+          <g class="city-group" id="dot-rondonopolis">
+            <circle class="pulse-ring" cx="300" cy="330"/>
+            <circle class="city-dot" cx="300" cy="330"/>
+            <text class="city-label" x="316" y="326">Rondonópolis</text>
+            <text class="city-count" x="316" y="340">4 emissoras</text>
+          </g>
 
-        <!-- Decorative grid lines inside state -->
-        <line x1="40" y1="180" x2="470" y2="180" stroke="#222" stroke-width="0.5" stroke-dasharray="4,6"/>
-        <line x1="40" y1="280" x2="460" y2="280" stroke="#222" stroke-width="0.5" stroke-dasharray="4,6"/>
-        <line x1="150" y1="30" x2="100" y2="450" stroke="#222" stroke-width="0.5" stroke-dasharray="4,6"/>
-        <line x1="280" y1="30" x2="260" y2="480" stroke="#222" stroke-width="0.5" stroke-dasharray="4,6"/>
-        <line x1="390" y1="30" x2="400" y2="440" stroke="#222" stroke-width="0.5" stroke-dasharray="4,6"/>
+          <!-- ── CITY: Primavera do Leste (centro-leste) ── -->
+          <g class="city-group" id="dot-primavera">
+            <circle class="pulse-ring" cx="340" cy="270"/>
+            <circle class="city-dot" cx="340" cy="270"/>
+            <text class="city-label" x="356" y="266">Primavera do Leste</text>
+            <text class="city-count" x="356" y="280">3 emissoras</text>
+          </g>
 
-        <!-- MT label -->
-        <text x="250" y="255" font-family="Bebas Neue, sans-serif" font-size="72" fill="#1e1e1e" text-anchor="middle" letter-spacing="8">MT</text>
+          <!-- ── CITY: Tangará da Serra (centro-oeste) ── -->
+          <g class="city-group" id="dot-tangara">
+            <circle class="pulse-ring" cx="140" cy="235"/>
+            <circle class="city-dot" cx="140" cy="235"/>
+            <text class="city-label" x="156" y="231">Tangará da Serra</text>
+            <text class="city-count" x="156" y="245">2 emissoras</text>
+          </g>
 
-        <!-- ── CITY: Rondonópolis (Sul) ── -->
-        <g class="city-group" onclick="openCity('rondonopolis')" id="dot-rondonopolis">
-          <circle class="pulse-ring" cx="280" cy="390"/>
-          <circle class="city-dot" cx="280" cy="390"/>
-          <text class="city-label" x="296" y="386">Rondonópolis</text>
-          <text class="city-count" x="296" y="400">4 emissoras</text>
-        </g>
+          <!-- ── CITY: Barra dos Garças (leste) ── -->
+          <g class="city-group" id="dot-barra">
+            <circle class="pulse-ring" cx="380" cy="210"/>
+            <circle class="city-dot" cx="380" cy="210"/>
+            <text class="city-label" x="310" y="196">Barra dos Garças</text>
+            <text class="city-count" x="310" y="210">3 emissoras</text>
+          </g>
 
-        <!-- ── CITY: Primavera do Leste (Centro-Sul) ── -->
-        <g class="city-group" onclick="openCity('primavera')" id="dot-primavera">
-          <circle class="pulse-ring" cx="340" cy="330"/>
-          <circle class="city-dot" cx="340" cy="330"/>
-          <text class="city-label" x="356" y="326">Primavera do Leste</text>
-          <text class="city-count" x="356" y="340">3 emissoras</text>
-        </g>
-
-        <!-- ── CITY: Tangará da Serra (Oeste) ── -->
-        <g class="city-group" onclick="openCity('tangara')" id="dot-tangara">
-          <circle class="pulse-ring" cx="130" cy="260"/>
-          <circle class="city-dot" cx="130" cy="260"/>
-          <text class="city-label" x="146" y="256">Tangará da Serra</text>
-          <text class="city-count" x="146" y="270">2 emissoras</text>
-        </g>
-
-        <!-- ── CITY: Barra dos Garças (Leste) ── -->
-        <g class="city-group" onclick="openCity('barra')" id="dot-barra">
-          <circle class="pulse-ring" cx="400" cy="270"/>
-          <circle class="city-dot" cx="400" cy="270"/>
-          <text class="city-label" x="360" y="250">Barra dos Garças</text>
-          <text class="city-count" x="360" y="264">3 emissoras</text>
-        </g>
-      </svg>
+        </svg>
+      </div>
     </div>
 
     <p class="bottom-hint">↑ Clique em qualquer cidade para ver as emissoras</p>
@@ -941,6 +938,33 @@ document.addEventListener('keydown', e => {
     if (document.getElementById('overlay-files').classList.contains('active')) closeFiles();
     else if (document.getElementById('overlay-city').classList.contains('active')) closeCity();
   }
+});
+
+// ── TOUCH / CLICK BINDINGS para as cidades no mapa ────────────
+// Suporte a touch (mobile) e click (desktop)
+const cityMap = {
+  'dot-rondonopolis': 'rondonopolis',
+  'dot-primavera':    'primavera',
+  'dot-tangara':      'tangara',
+  'dot-barra':        'barra'
+};
+
+Object.entries(cityMap).forEach(([elId, cityKey]) => {
+  const el = document.getElementById(elId);
+  if (!el) return;
+
+  // Click (desktop)
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCity(cityKey);
+  });
+
+  // Touch (mobile) — evita delay de 300ms
+  el.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openCity(cityKey);
+  }, { passive: false });
 });
 </script>
 </body>
