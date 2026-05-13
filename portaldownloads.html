@@ -76,15 +76,15 @@
     padding: 40px 20px;
   }
 
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(32px, 5vw, 60px);
-    letter-spacing: 6px;
-    color: var(--text);
+  .hero-logo {
+    margin-bottom: 30px;
     text-align: center;
-    margin-bottom: 8px;
   }
-  .hero-title span { color: var(--red); }
+  .hero-logo img {
+    width: clamp(180px, 30vw, 280px);
+    height: auto;
+    filter: drop-shadow(0 0 24px rgba(232,0,29,0.3));
+  }
 
   .hero-sub {
     font-family: 'Barlow Condensed', sans-serif;
@@ -93,7 +93,7 @@
     color: var(--muted);
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
   }
 
   /* ── MAP WRAPPER ── */
@@ -289,6 +289,7 @@
   .emissora-card:hover .emissora-arrow { transform: translateX(4px); }
 
   /* ── DRIVE FILE LIST ── */
+  /* ── FILE CARDS (V1 style) ── */
   .file-section-label {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 12px;
@@ -307,82 +308,138 @@
     background: var(--border);
   }
 
-  .loading-files {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-    font-size: 14px;
+  /* Search bar */
+  .search-wrap { position: relative; margin-bottom: 16px; }
+  .search-wrap .ico {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%); color: var(--muted);
+    pointer-events: none; display: flex;
   }
-  .loading-files .spinner {
-    width: 32px; height: 32px;
-    border: 2px solid var(--border);
+  #searchInput {
+    width: 100%; padding: 11px 16px 11px 44px;
+    background: #161616; border: 1px solid var(--border);
+    border-radius: 50px; color: var(--text);
+    font-family: 'Barlow', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #searchInput::placeholder { color: var(--muted); }
+  #searchInput:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(232,0,29,0.15); }
+
+  /* Counter */
+  .counter-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: #161616; border: 1px solid var(--border);
+    border-radius: 50px; padding: 8px 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 16px; width: fit-content;
+  }
+  .counter-badge .count-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; color: var(--red); line-height: 1;
+  }
+
+  /* Loader */
+  #files-loader {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; padding: 60px 20px;
+  }
+  .spinner {
+    width: 44px; height: 44px;
+    border: 3px solid rgba(232,0,29,0.15);
     border-top-color: var(--red);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
-    margin: 0 auto 12px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .file-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 8px;
-    background: #161616;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .file-meta { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
-  .file-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .file-size {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
-
-  .file-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
-  .btn-action {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 7px 12px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background: none;
-    color: var(--text);
+  #files-loader p {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s;
-    white-space: nowrap;
+    font-size: 13px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted);
   }
 
-  .btn-download { border-color: #2a4a2a; color: #5cdb5c; }
-  .btn-download:hover { background: #1a3a1a; border-color: #5cdb5c; }
+  /* Msg box */
+  #files-msg {
+    display: none; text-align: center; padding: 60px 20px;
+  }
+  #files-msg .msg-icon { font-size: 50px; margin-bottom: 14px; opacity: .4; }
+  #files-msg h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: 2px;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  #files-msg p { font-size: 13px; color: var(--muted); line-height: 1.7; }
 
-  .btn-view { border-color: #2a2a4a; color: #7c9dff; }
-  .btn-view:hover { background: #1a1a3a; border-color: #7c9dff; }
+  /* File grid */
+  #file-grid { display: none; }
 
-  .btn-whatsapp { border-color: #2a4a2a; color: #25D366; }
-  .btn-whatsapp:hover { background: #1a3a1a; border-color: #25D366; }
+  /* File card */
+  .file-card {
+    background: #161616; border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 10px;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  .file-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(232,0,29,0.4);
+    box-shadow: 0 8px 28px rgba(232,0,29,0.15);
+  }
+  .pdf-icon {
+    flex-shrink: 0; width: 42px; height: 52px;
+    background: linear-gradient(145deg, #3a0000 0%, var(--red) 100%);
+    border-radius: 7px; display: flex; align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 12px;
+    letter-spacing: 1px; color: white;
+    box-shadow: 0 4px 12px rgba(232,0,29,0.35);
+    position: relative; overflow: hidden;
+  }
+  .pdf-icon::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 12px; height: 12px;
+    background: rgba(255,255,255,0.2);
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+  }
+  .file-info { flex: 1; min-width: 0; }
+  .file-name {
+    font-weight: 600; font-size: 14px; color: var(--text);
+    line-height: 1.4; word-break: break-word; margin-bottom: 4px;
+  }
+  .file-meta {
+    font-size: 11px; color: var(--muted); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .file-actions { display: flex; gap: 7px; flex-wrap: wrap; }
 
-  .btn-action svg { width: 13px; height: 13px; }
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 13px; border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: .5px;
+    text-decoration: none; cursor: pointer; border: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn svg { width: 12px; height: 12px; }
+  .btn-view { background: var(--red); color: white; }
+  .btn-view:hover { background: #ff1a33; box-shadow: 0 4px 14px rgba(232,0,29,0.5); }
+  .btn-download { background: rgba(255,255,255,0.07); color: var(--muted); border: 1px solid var(--border); }
+  .btn-download:hover { background: rgba(255,255,255,0.13); color: white; }
+  .btn-whatsapp {
+    background: rgba(37,211,102,0.1); color: #25d366;
+    border: 1px solid rgba(37,211,102,0.22);
+  }
+  .btn-whatsapp:hover {
+    background: rgba(37,211,102,0.2); color: #2be870;
+    border-color: rgba(37,211,102,0.5);
+    box-shadow: 0 4px 12px rgba(37,211,102,0.2);
+  }
 
   /* Back button inside panel */
   .btn-back {
@@ -451,11 +508,14 @@
 
 <main>
   <section class="hero">
-    <h1 class="hero-title">NOSSA <span>COBERTURA</span></h1>
+    <div class="hero-logo">
+      <img src="data:image/png;base64,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+GamNsf5Q4AHx3+KzaUaWVV3YaaBhpqQ725y5/eeXZ81BW6VtPcKad+dSOVr3Y34BBW3Hx5RTnPqyv1nWaciVePj8q4Nc/d0+CR2i5yvgttTNGcPjhe5pxuIBIVa0J0pNzcaG4PaKvaY3AYEg5Y5hY7jprZ6i31MDG1WvJE5jcxjGSCOa53G98cjZI3OY9py1wOCDzWmjF4oNTWzLPVu0KoyarMafFHZ8ST5P9/BnT9PrZX11u6WhqJj0Y+8p2uOJG88cSOS5fg5xjaug2jTuk+wsbc45vtLdjnRsBa7t37FCVtbo5LpJT3OFlQyAP6SeHohguG0EbeJ3hbcd2VpwlErtcjh504ZNFq3eyab6e34d6+Je9FLd6rsdPTObiUjXl/Md/lu8Flmq7NK7M1TQPcNmXSMJCrl104t0luqI6JtSKh7C2MuYAATsznPDeudrTXizsblPkWmd2ixsGFdGKlOKXj026fE7XSVVtLxDSVFIXOOQyJ7cnZyCrfpOtvT22K4xty+ndqv/IfoceZVBtlXJQ3CCsi9qF4djnzHjuV/rNMrBV0ktNNHVmOVhY4dGNxHevrx502KUeZjDWsbVMKynI2rfdz+T+fU5ui9dgOIacjOw43rxWZ5+EREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf//Z" alt="Grupo Agora de Comunicação" />
+    </div>
     <p class="hero-sub">Selecione uma cidade no mapa</p>
 
     <div class="map-wrapper">
       <!-- Simplified Mato Grosso SVG map with city markers -->
+
       <svg viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" id="mt-map">
         <!-- Mato Grosso state outline (simplified) -->
         <path class="mt-path" d="
@@ -566,66 +626,212 @@
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — substitua pela sua Google Drive API Key real
+// ══════════════════════════════════════════════════════════════
+const GOOGLE_API_KEY = "AIzaSyDZyXSTkryWfoVP4-QSLlB3SiZK8-wsvKU";
+
+// ── DADOS DAS CIDADES E EMISSORAS ─────────────────────────────
 const CITIES = {
   rondonopolis: {
     name: "Rondonópolis",
     emissoras: [
-      { id: "agora-fm",    name: "Agora FM",                type: "Rádio FM",       folder: "1HoQdk1A-00VbOtuNXvJrqJ8S_Xn593NN" },
-      { id: "jovem-roo",   name: "Jovem Pan Sulmatogrossense", type: "Rádio",        folder: "1iaomV55ZEJrDPaLtwGw1JQdPzbiOjzg4" },
-      { id: "tv-cidade",   name: "TV Cidade",               type: "Televisão",      folder: "1V2vUnY2Ck4v3XIG6tkLiMI22snuA-XWk" },
-      { id: "agora-mt-roo",name: "AGORA MT – ROO",          type: "Portal de Notícias", folder: "1MymIVUISw3zAjfJNt_rVmt7uHEGZWMQD" },
+      { id: "agora-fm",     name: "Agora FM",                    type: "Rádio FM",           folder: "1HoQdk1A-00VbOtuNXvJrqJ8S_Xn593NN" },
+      { id: "jovem-roo",    name: "Jovem Pan Sulmatogrossense",   type: "Rádio",              folder: "1iaomV55ZEJrDPaLtwGw1JQdPzbiOjzg4" },
+      { id: "tv-cidade",    name: "TV Cidade",                   type: "Televisão",           folder: "1V2vUnY2Ck4v3XIG6tkLiMI22snuA-XWk" },
+      { id: "agora-mt-roo", name: "AGORA MT – ROO",              type: "Portal de Notícias",  folder: "1MymIVUISw3zAjfJNt_rVmt7uHEGZWMQD" },
     ]
   },
   primavera: {
     name: "Primavera do Leste",
     emissoras: [
-      { id: "tv-pvr",      name: "TV Primavera Record",     type: "Televisão",      folder: "1W3kdhTZVOc5yZMxNDfJMo15c6rJPKfV6" },
-      { id: "agora-mt-pva",name: "AGORA MT – PVA",          type: "Portal de Notícias", folder: "1b7MBjEJOmSNyumfYuUt0ns6Wxj29wZlV" },
-      { id: "radio-pvr",   name: "Rádio Primavera",         type: "Rádio",          folder: "100L5Xlv5i0WlwAiEZIbTAw2WxfSS1lIo" },
+      { id: "tv-pvr",       name: "TV Primavera Record",         type: "Televisão",           folder: "1W3kdhTZVOc5yZMxNDfJMo15c6rJPKfV6" },
+      { id: "agora-mt-pva", name: "AGORA MT – PVA",             type: "Portal de Notícias",  folder: "1b7MBjEJOmSNyumfYuUt0ns6Wxj29wZlV" },
+      { id: "radio-pvr",    name: "Rádio Primavera",            type: "Rádio",               folder: "100L5Xlv5i0WlwAiEZIbTAw2WxfSS1lIo" },
     ]
   },
   barra: {
     name: "Barra dos Garças",
     emissoras: [
-      { id: "agora-mt-bga",name: "AGORA MT – BGA",          type: "Portal de Notícias", folder: "1n_oU4xjhGP2QsCsOVKP-mDFfYjexk4aU" },
-      { id: "jovem-bga",   name: "Jovem Pan – Barra do Garças", type: "Rádio",      folder: "1AuAXeS6CXFCakuB2I1RJSmqlj2YebwFr" },
-      { id: "tv-cidade-bga",name: "TV Cidade Record (BGA)", type: "Televisão",      folder: "1e4u8BGLDTXp--_oPU6hGQYVwvlhHvZFx" },
+      { id: "agora-mt-bga", name: "AGORA MT – BGA",             type: "Portal de Notícias",  folder: "1n_oU4xjhGP2QsCsOVKP-mDFfYjexk4aU" },
+      { id: "jovem-bga",    name: "Jovem Pan – Barra do Garças", type: "Rádio",              folder: "1AuAXeS6CXFCakuB2I1RJSmqlj2YebwFr" },
+      { id: "tv-cidade-bga",name: "TV Cidade Record (BGA)",      type: "Televisão",           folder: "1e4u8BGLDTXp--_oPU6hGQYVwvlhHvZFx" },
     ]
   },
   tangara: {
     name: "Tangará da Serra",
     emissoras: [
-      { id: "tv-vale",     name: "TV Vale Record",          type: "Televisão",      folder: "1_yXSdmArFmOj6y2lcDtcDa-alconnYpr" },
-      { id: "agora-mt-tga",name: "AGORA MT – TGA",          type: "Portal de Notícias", folder: "1LepXxUoJod9hV6tlBdP3xQYiYoo2bTBI" },
+      { id: "tv-vale",      name: "TV Vale Record",              type: "Televisão",           folder: "1_yXSdmArFmOj6y2lcDtcDa-alconnYpr" },
+      { id: "agora-mt-tga", name: "AGORA MT – TGA",             type: "Portal de Notícias",  folder: "1LepXxUoJod9hV6tlBdP3xQYiYoo2bTBI" },
     ]
   }
 };
 
 let currentCity = null;
 let currentEmissora = null;
+let allFiles = [];
 
-// ── GOOGLE DRIVE API ──────────────────────────────────────────────────────
-// Uses public Google Drive folder listing via gdown-style URL
-async function fetchDriveFiles(folderId) {
-  // We use the Google Drive public API export to list files
-  // This works for publicly shared folders
-  const url = `https://drive.google.com/drive/folders/${folderId}`;
-  
-  // Since direct API calls to Google Drive require auth,
-  // we'll use a workaround via the folder's RSS/export URL
-  // For shared public folders, we embed the folder view
-  return null; // Will use embedded iframe approach
+// ── UTILITÁRIOS ───────────────────────────────────────────────
+function formatDate(iso) {
+  if (!iso) return 'Data desconhecida';
+  return new Date(iso).toLocaleDateString('pt-BR', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
+function stripExt(name) { return name.replace(/\.pdf$/i, ''); }
+
+// ── CRIAR CARD DE ARQUIVO (igual ao V1) ───────────────────────
+function createCard(file, index) {
+  const viewUrl = `https://drive.google.com/file/d/${file.id}/view`;
+  const dlUrl   = `https://drive.google.com/uc?export=download&id=${file.id}`;
+  const name    = stripExt(file.name);
+  const date    = formatDate(file.modifiedTime);
+  const card    = document.createElement('div');
+  card.className = 'file-card';
+  card.setAttribute('role', 'listitem');
+  card.style.animationDelay = `${Math.min(index * 0.055, 0.6)}s`;
+  card.innerHTML = `
+    <div class="pdf-icon" aria-hidden="true">PDF</div>
+    <div class="file-info">
+      <div class="file-name" title="${file.name}">${name}</div>
+      <div class="file-meta">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        ${date}
+      </div>
+      <div class="file-actions">
+        <a class="btn btn-view" href="${viewUrl}" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Visualizar
+        </a>
+        <a class="btn btn-download" href="${dlUrl}" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Baixar
+        </a>
+        <a class="btn btn-whatsapp" href="#" onclick="return sendWhatsApp(event,'${file.id}','${name.replace(/'/g, "\\'")}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+          </svg>
+          Enviar
+        </a>
+      </div>
+    </div>`;
+  return card;
 }
 
-// ── OPEN CITY ─────────────────────────────────────────────────────────────
+// ── RENDERIZAR LISTA DE ARQUIVOS ──────────────────────────────
+function renderFiles(files) {
+  const grid  = document.getElementById('file-grid');
+  const msg   = document.getElementById('files-msg');
+  const count = document.getElementById('file-count');
+  grid.innerHTML = '';
+  if (files.length === 0) {
+    grid.style.display = 'none';
+    document.getElementById('files-msg-icon').textContent  = '🔍';
+    document.getElementById('files-msg-title').textContent = 'Nenhum resultado';
+    document.getElementById('files-msg-text').textContent  = 'Nenhum arquivo corresponde à sua busca.';
+    msg.style.display = 'block';
+    return;
+  }
+  msg.style.display   = 'none';
+  grid.style.display  = 'block';
+  if (count) count.textContent = files.length;
+  files.forEach((f, i) => grid.appendChild(createCard(f, i)));
+}
+
+// ── BUSCAR ARQUIVOS VIA GOOGLE DRIVE API ──────────────────────
+async function fetchDriveFiles(folderId) {
+  const loader = document.getElementById('files-loader');
+  const grid   = document.getElementById('file-grid');
+  const msg    = document.getElementById('files-msg');
+  const count  = document.getElementById('file-count');
+
+  loader.style.display = 'flex';
+  grid.style.display   = 'none';
+  msg.style.display    = 'none';
+
+  const q      = encodeURIComponent(`'${folderId}' in parents and mimeType='application/pdf' and trashed=false`);
+  const fields = encodeURIComponent('files(id,name,modifiedTime),nextPageToken');
+  const order  = encodeURIComponent('modifiedTime desc');
+  let fetched = [], pageToken = '';
+
+  try {
+    do {
+      let url = `https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=${order}&pageSize=200&key=${GOOGLE_API_KEY}`;
+      if (pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `Erro HTTP ${resp.status}`);
+      }
+      const data = await resp.json();
+      fetched    = fetched.concat(data.files || []);
+      pageToken  = data.nextPageToken || '';
+    } while (pageToken);
+
+    allFiles = fetched;
+    if (count) count.textContent = allFiles.length;
+    loader.style.display = 'none';
+
+    if (allFiles.length === 0) {
+      document.getElementById('files-msg-icon').textContent  = '📭';
+      document.getElementById('files-msg-title').textContent = 'Nenhum arquivo encontrado';
+      document.getElementById('files-msg-text').textContent  = 'Esta pasta não contém arquivos PDF. Verifique se a pasta está pública.';
+      msg.style.display = 'block';
+      return;
+    }
+    renderFiles(allFiles);
+
+    // bind search
+    const si = document.getElementById('searchInput');
+    if (si) {
+      si.oninput = () => {
+        const q2 = si.value.trim().toLowerCase();
+        renderFiles(q2 ? allFiles.filter(f => f.name.toLowerCase().includes(q2)) : allFiles);
+      };
+    }
+
+  } catch(err) {
+    console.error(err);
+    loader.style.display = 'none';
+    document.getElementById('files-msg-icon').textContent  = '⚠️';
+    document.getElementById('files-msg-title').textContent = 'Erro ao carregar';
+    document.getElementById('files-msg-text').textContent  = `${err.message}. Verifique se a API Key está ativa e a pasta é pública.`;
+    msg.style.display = 'block';
+  }
+}
+
+// ── WHATSAPP ──────────────────────────────────────────────────
+function sendWhatsApp(event, fileId, fileName) {
+  event.preventDefault();
+  event.stopPropagation();
+  const emName  = currentEmissora ? currentEmissora.name : 'Emissora';
+  const fileUrl = `https://drive.google.com/file/d/${fileId}/view`;
+  const text    = `📄 *${fileName}*\n\nEmissora: *${emName}*\nGrupo Agora de Comunicação\n\n🔗 ${fileUrl}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  return false;
+}
+
+// ── ABRIR CIDADE ──────────────────────────────────────────────
 function openCity(cityKey) {
   currentCity = cityKey;
   const city = CITIES[cityKey];
   if (!city) return;
 
   document.getElementById('city-panel-title').innerHTML =
-    city.name.split(' ').map((w,i) => i === 0 ? `<span>${w}</span>` : w).join(' ') || city.name;
+    city.name.split(' ').map((w,i) => i === 0 ? `<span>${w}</span>` : w).join(' ');
 
   const body = document.getElementById('city-panel-body');
   body.innerHTML = `
@@ -651,125 +857,67 @@ function closeCity() {
   currentCity = null;
 }
 
-// ── OPEN EMISSORA ─────────────────────────────────────────────────────────
+// ── ABRIR EMISSORA (arquivos) ─────────────────────────────────
 function openEmissora(cityKey, emId) {
   const city = CITIES[cityKey];
-  const em = city.emissoras.find(e => e.id === emId);
+  const em   = city.emissoras.find(e => e.id === emId);
   if (!em) return;
   currentEmissora = em;
+  allFiles = [];
 
   document.getElementById('files-panel-title').innerHTML =
     `<span>${em.name.split(' ')[0]}</span> ${em.name.split(' ').slice(1).join(' ')}`;
 
-  const body = document.getElementById('files-panel-body');
-
-  const driveUrl = `https://drive.google.com/drive/folders/${em.folder}`;
-
-  body.innerHTML = `
+  document.getElementById('files-panel-body').innerHTML = `
     <button class="btn-back" onclick="backToCity()">← Voltar para ${city.name}</button>
-    <div class="file-section-label">Arquivos da pasta</div>
-    <div id="files-list">
-      <div class="loading-files">
-        <div class="spinner"></div>
-        Carregando arquivos do Google Drive…
-      </div>
+
+    <div class="file-section-label">Arquivos disponíveis</div>
+
+    <!-- search + counter -->
+    <div class="search-wrap">
+      <span class="ico">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </span>
+      <input type="search" id="searchInput" placeholder="Buscar arquivo por nome…" autocomplete="off"/>
     </div>
+    <div class="counter-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <span class="count-num" id="file-count">–</span>
+      <span>arquivo(s) PDF</span>
+    </div>
+
+    <!-- loader -->
+    <div id="files-loader">
+      <div class="spinner"></div>
+      <p>Carregando arquivos…</p>
+    </div>
+
+    <!-- msg -->
+    <div id="files-msg">
+      <div class="msg-icon" id="files-msg-icon">📭</div>
+      <h3 id="files-msg-title">Nenhum arquivo encontrado</h3>
+      <p id="files-msg-text">Esta pasta não contém arquivos PDF no momento.</p>
+    </div>
+
+    <!-- grid -->
+    <div id="file-grid" role="list"></div>
   `;
 
   document.getElementById('overlay-city').classList.remove('active');
   document.getElementById('overlay-files').classList.add('active');
 
-  // Load files from Google Drive
-  loadDriveFiles(em.folder, driveUrl);
+  fetchDriveFiles(em.folder);
 }
 
-// ── LOAD DRIVE FILES ──────────────────────────────────────────────────────
-async function loadDriveFiles(folderId, folderUrl) {
-  const listEl = document.getElementById('files-list');
-
-  try {
-    // Use Google Drive's public folder export page via CORS proxy approach
-    // Since direct Drive folder API requires OAuth, we use the public share link
-    // and parse the folder listing via the export URL
-    const exportUrl = `https://drive.google.com/drive/folders/${folderId}`;
-
-    // Try fetching via the Google Drive API v3 public endpoint (no auth needed for public folders)
-    const apiUrl = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=AIzaSyD_placeholder&fields=files(id,name,mimeType,size,webViewLink,webContentLink)`;
-
-    // Since we can't use a real API key here, we'll use the public folder embed
-    // and show a direct link + message
-    showFolderEmbed(folderId, folderUrl, listEl);
-
-  } catch(e) {
-    showFolderEmbed(folderId, folderUrl, listEl);
-  }
-}
-
-function showFolderEmbed(folderId, folderUrl, listEl) {
-  // For Google Drive public folders, we show a functional embed + direct link
-  // The iframe embed lets users see and interact with files
-  listEl.innerHTML = `
-    <div style="margin-bottom:16px;">
-      <a href="${folderUrl}" target="_blank" class="btn-action btn-view" style="display:inline-flex; margin-bottom:8px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Abrir pasta no Google Drive
-      </a>
-      <p style="font-size:12px;color:var(--muted);letter-spacing:1px;">
-        Os arquivos estão disponíveis no Google Drive. Use os botões abaixo para acessar, ou abra a pasta completa acima.
-      </p>
-    </div>
-    <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:16px;">
-      <iframe 
-        src="https://drive.google.com/embeddedfolderview?id=${folderId}#list"
-        style="width:100%;height:300px;border:none;background:#111;"
-        title="Google Drive Files">
-      </iframe>
-    </div>
-    <div class="file-section-label">Ações rápidas</div>
-    <div class="file-item">
-      <div class="file-meta">
-        <div class="file-name">📁 Todos os arquivos da pasta</div>
-        <div class="file-size">Google Drive • Pasta pública</div>
-      </div>
-      <div class="file-actions">
-        <a href="${folderUrl}" target="_blank" class="btn-action btn-download">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download
-        </a>
-        <a href="${folderUrl}" target="_blank" class="btn-action btn-view">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          Visualizar
-        </a>
-        <button class="btn-action btn-whatsapp" onclick="sendWhatsApp('${folderUrl}', 'Pasta de arquivos')">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Enviar
-        </button>
-      </div>
-    </div>
-    <p style="font-size:11px;color:#444;text-align:center;margin-top:8px;letter-spacing:1px;">
-      Para download de arquivos individuais, acesse a pasta no Google Drive
-    </p>
-  `;
-}
-
-// ── WHATSAPP SEND ─────────────────────────────────────────────────────────
-function sendWhatsApp(fileUrl, fileName) {
-  const emName = currentEmissora ? currentEmissora.name : 'Emissora';
-  const msg = encodeURIComponent(
-    `📢 *Grupo Agora de Comunicação*\n\n` +
-    `Emissora: *${emName}*\n` +
-    `Arquivo: ${fileName}\n\n` +
-    `🔗 Acesse: ${fileUrl}`
-  );
-  window.open(`https://wa.me/?text=${msg}`, '_blank');
-}
-
-// ── NAVIGATION ────────────────────────────────────────────────────────────
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────
 function backToCity() {
   document.getElementById('overlay-files').classList.remove('active');
-  if (currentCity) {
-    document.getElementById('overlay-city').classList.add('active');
-  }
+  if (currentCity) document.getElementById('overlay-city').classList.add('active');
 }
 
 function closeFiles() {
@@ -779,7 +927,7 @@ function closeFiles() {
   currentCity = null;
 }
 
-// Close on backdrop click
+// Close on backdrop
 document.getElementById('overlay-city').addEventListener('click', function(e) {
   if (e.target === this) closeCity();
 });
