@@ -115,100 +115,94 @@
     width: 100%;
     height: auto;
     display: block;
-    /* Invert: white bg becomes dark, black shape becomes light */
-    filter: invert(1) brightness(0.18) sepia(1) hue-rotate(320deg) saturate(3);
-    filter: invert(0.85) brightness(0.35) sepia(0.4) saturate(2) hue-rotate(330deg);
-    /* Simple: make the black MT shape a dark red-tinted color */
     filter: brightness(0.22) sepia(1) saturate(3) hue-rotate(310deg);
+    border-radius: 8px;
   }
 
-  .mt-overlay {
+  /* ── CITY PINS sobre o mapa ── */
+  .city-pin {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    overflow: visible;
-  }
-
-  /* ── CITY BUTTONS ── */
-  .city-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    max-width: 520px;
-    margin: 18px auto 0;
-  }
-
-  .city-btn {
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #161616;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, transform 0.15s;
-    text-align: left;
+    gap: 6px;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    min-height: 60px;
+    z-index: 10;
   }
 
-  .city-btn:hover,
-  .city-btn:active {
-    background: #1d1010;
-    border-color: var(--red);
-    transform: translateY(-2px);
-  }
-
-  .city-btn-dot {
+  .pin-dot {
     flex-shrink: 0;
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
     background: var(--red);
-    box-shadow: 0 0 8px var(--red);
-    animation: dotPulse 2s ease-in-out infinite;
+    box-shadow: 0 0 0 3px rgba(232,0,29,0.3);
+    animation: pinPulse 2s ease-in-out infinite;
+    transition: transform 0.15s, background 0.15s;
   }
 
-  @keyframes dotPulse {
-    0%, 100% { box-shadow: 0 0 6px var(--red); }
-    50%       { box-shadow: 0 0 14px var(--red), 0 0 20px rgba(232,0,29,0.4); }
+  @keyframes pinPulse {
+    0%,100% { box-shadow: 0 0 0 3px rgba(232,0,29,0.3); }
+    50%     { box-shadow: 0 0 0 7px rgba(232,0,29,0.1), 0 0 10px rgba(232,0,29,0.5); }
   }
 
-  .city-btn-name {
-    flex: 1;
+  .city-pin:hover .pin-dot,
+  .city-pin:active .pin-dot {
+    background: var(--gold);
+    box-shadow: 0 0 0 5px rgba(255,184,0,0.25);
+    transform: scale(1.35);
+  }
+
+  .pin-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: rgba(8,8,8,0.88);
+    border: 1px solid rgba(232,0,29,0.4);
+    border-radius: 6px;
+    padding: 5px 10px;
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 700;
-    color: var(--text);
+    color: #fff;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    line-height: 1.2;
-  }
-
-  .city-btn-sub {
-    font-family: 'Barlow', sans-serif;
-    font-size: 10px;
-    color: var(--muted);
-    display: block;
     white-space: nowrap;
+    backdrop-filter: blur(6px);
+    line-height: 1.2;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    pointer-events: none;
   }
 
-  .city-btn-arrow {
-    color: var(--red);
-    font-size: 22px;
-    line-height: 1;
-    flex-shrink: 0;
+  .city-pin:hover .pin-label,
+  .city-pin:active .pin-label {
+    background: rgba(232,0,29,0.9);
+    border-color: var(--red);
+    transform: scale(1.06);
   }
 
-  /* Wrap name + sub together */
-  .city-btn-name { display: flex; flex-direction: column; gap: 2px; }
+  .pin-sub {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.5px;
+    text-transform: none;
+  }
 
-  /* City dot + label (SVG — mantido por compatibilidade mas escondido) */
-  .city-group { display: none; }
-  .mt-overlay { display: none; }
+  .city-pin:hover .pin-sub,
+  .city-pin:active .pin-sub { color: rgba(255,255,255,0.9); }
+
+  /* animação escalonada dos dots */
+  .city-pin:nth-child(2) .pin-dot { animation-delay: 0s; }
+  .city-pin:nth-child(3) .pin-dot { animation-delay: 0.55s; }
+  .city-pin:nth-child(4) .pin-dot { animation-delay: 1.1s; }
+  .city-pin:nth-child(5) .pin-dot { animation-delay: 1.65s; }
 
   /* ── OVERLAY PANELS ── */
   .overlay {
@@ -524,9 +518,9 @@
     .hero-logo img { width: 150px; }
     .hero-sub { font-size: 11px; letter-spacing: 3px; margin-bottom: 18px; }
     .map-wrapper { max-width: 100%; }
-    .city-buttons { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-    .city-btn { padding: 12px 12px; min-height: 54px; }
-    .city-btn-name { font-size: 13px; }
+    .pin-label { font-size: 11px; padding: 4px 8px; }
+    .pin-sub { font-size: 9px; }
+    .pin-dot { width: 11px; height: 11px; }
     .bottom-hint { font-size: 10px; letter-spacing: 2px; margin-top: 16px; }
     .panel { border-radius: 20px 20px 0 0; max-height: 94vh; }
     .overlay { align-items: flex-end; padding: 0; }
@@ -567,9 +561,7 @@
         <!-- Mapa real do Mato Grosso -->
         <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAGhAbgDASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAgJBgcBBAUDAv/EAFIQAAIBAwIEAwMHCAERBwUAAAABAgMEBQYRBwgSMSFBURNhcQkUIjJSgZEVM0JicqGxwtIWIzRDU1ZzgoWSk5WywcPR0xcYJDdGdeGEoqOz8P/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCZYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB869ajb03Vr1adKC7ynJRS+9n0NM86lSVLlz1HOE3CalbbNPZ/2RTA3Mmn2e4IscmPHy81jOOgtXV4Ty1vQ6rC8k9pXUIrxhL1ml47+aT38Vu5TgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjF8oDrPD2vC2OkKWSoSy19eUqk7WMt5xox3blJeS36e/c2vzH5TW2I4TZW94f2da5zcVHpdGKnUpU9/pzjF/WaXkt347+RV1m8hksplK99l7u4u72tNyrVa83Kcpee7fjuB9tLZvIab1FYZ3FXEqF7Y14V6M4+Uovf8PcWx8NdUWms9C4fU1k4+zyFrCq4p79E9vpR+6W6+4qJJ0/J0atnf6Mzekbis5zxlzG4oRk+1Kqnul8JRb/xgJXgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADS80iqTmHVOPHDWKpRhGH5WrbKK8PrEy+eTitnNBaVxmB07KtZ3+d9r1X8JbOjSp9PUoPym+tePkt/PZqvu4rVbivOvXqSqVZtynOT3cm+7bA+ZtPld4h1OHPFrG5Kbbx17JWV/Ff3Kcl9L4xe0vua8zVh3cFYX2UzVljcZRnWvrqvCjb04d5VJSSil97QFxUHvBP1OTr4tV4422jddPt1SiqvT26tvHb3bnYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8HiDqe20bo3KanvbS7u7bG0HXq0rWClVlFPx2TaXgvF7vsmR6nzscPV9TS+qJfGnQX/EAlGCKs+dvRC+ppDUMvjKiv5jr1Od7Si/N6IzUv2rmkv8AmBLIERp88GBX1NA5KX7V/Bfys69Tnjxq/N8Ort/HKxX/AAwJgghvU55KX6HDab+OYX/ROvPnkr/ocNqa+OYf/RAmgCFM+eLIv6nDu0Xxykn/AMM+E+eDOP6mgcdH9q/m/wCUCboINVOd7VL/ADeiMNH9q5qP/kdepzt62f5vR+no/tTrP+YCdoIFVOdfiC/qaY0zH4wrv/iH4/763Eb+9vS/+ir/APVAzv5SujQen9GXDl/X43V1CK/VcKbf71H8SEhsfjfxj1ZxbyFjcaiVnb0LGMlbWtpTcacHLbql9JttvpXd+Xga4AG9ORnCW+Y5gcXWuZ0lHHW1e8jCe305KPQkvenPq/xTRZlHCvWF9oLX+I1XYR66lhcKc6XVsqtNracN/LeLa38twLcF2BivDfX2mdeaYs87gMlQrUbmHVKk5pVaMvOE477qSfh/DdbMypNNbrxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8rV91hrHTGTu9Q1aNLE07Wo7yVb6nsul9W/qtt1sVC5WFtTydzCyqOraxqyVGbWzlDd9L28vDYtn4qaNstf6Cyukshc17ahkKSi61F7ShKMlKL96Uordea8CqzX2mcho3WOU0xlfZ/PMdXdGo6ct4y81Je5pp+vj4geEAAAAAAAAAAAAAAAAAAAAA7NhfXdhdUrqzuatvWpSUoVKc3GUWnummiwXlt5k9N60xmP07qi9hjNSwpxpOddqNK8kvDqjLspP7L834bleJzGUoSUotprs0Bcsmn2e5yRX5EOLt3qXC3OhdR3jrX+KoqrY16s951aG6Tg2+7g2tvc9vIlMpwfaSfwA/QOrk8jj8ZbfOcje29nQ6lH2laooR3b2S3fh4s7MJRnHqi016oDkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYvxYeoo8N9QVNJVfZZynY1J2UuhSftEt0kn4bvbZe9oqZy17e5HJXF/kbirc3lxUlVr1ast5znJ7tt+rZcbJfRfwK6eeLR2j9IcT7enpej81r5C2ld39tCe9OnOU3s4r9Hq2k2u3okBH4AAAAAAAAAAAAAAAAAAAAAAAH1tbm4tayrW1erQqLtOnJxkvvRsvgnxn1Pw81va5q4yGRy2PjGVK5sa13KUakGvLqbSkns09vI1eAN0cx/HvJ8XZY+0jjXiMXYylUjQVZzlVqPwU5PZLwW6XxZvLl15n9JYLhbZYfX+Wv5ZexnKjCUbeVV1KK+o3JeaXh4+hCUAWMQ5u+D8rhU3dZiEX/bHYvpX79zIsXzKcF7/pUdZ0LeT8q9vVht97jsVigC1604xcLLpJ0df6e8ft30If7TR7FhrvROQko2Or8DcyfZUshSk39ykVFbv1ClJdpNfBgXKUq1KrFSp1ITi1unF7o/e5Tpa5fK2slK1yV5Qa7OnXlH+DPZteIOvLRJWutNQ0Uu3s8lVj/CQFuW6BVDa8YeKls06XEPU628pZKrL+Mj1bXmA4yW23s9f5eX+ElGp/tJgWkgrJt+ZvjbR221tVnt9uyt5fxpnfoc13Gynt1altaq/Xxtv/uggLJwV0WvN7xioyTqXeGuV6Vcelv/AJrR7lhzqcSaWyvNPaXuV59NGtTb/wDyMCfYITY/nhy0dlf8PrKt6uhkpU/3OnIyLGc7+najSyWhcrbL1t7ynW/2lACW4I5YznH4UXXSrq21FYt93Vs4SS/zJyf7jKsbzO8E71RS1lGhJ/o17KvDb73Db94G4wYBa8aeE1xSVSnxD02k/t39OD/BtM7EeL3CyXbiHpf/AFpR/pAZuDClxa4XvtxC0t/rSj/SP2uK3DJ9uIGl/wDWtH+kBmQMPXFLhq+2vtMP/KlH+kftcTeHT7a700/8p0f6QGWgxalxG0BVmoU9a6dnJ9lHJUm3/wDce5Z5bF3lNVLTI2leD7Sp1oyX7mB3QfmM4SW8ZJ/Bn63AA4lJR7tI5AAAAAAD7FZPOBp3UeD45Z25z9SpcQyVZ3VlcNfRnQfhGK/YSUNv1feWbPsQb+UQ1pg8xm8JpTGXVG5vcTKtUv8Aojv7GUlFRh1euybaXu3AiWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB9aNxXoy6qNepTkvOEmn+4+QAyLGa61rjNlj9W521S7Klf1Yr8FIyG2438WrekqdLX2c6V9q46n+L3Zrw5S3eyA2fp3XvFDX+t9PYC61vm61a7yNCjRbupRjCUqiSm1HZPbv4+haNTTjTjFycmklu/MjPyrcuOE0pZ4rXOo5vJZ+rRhc2lJrppWXVHdbL9KaT7vwXkvMk0uwAAAAAAl2ZWJzYaBz+iuLeUuszVV1QzdzWyFrdRi1GcZ1G3B79pR3Sa9NvUs7I2/KEYO2yHBm2y03Rhc43I05U5S2UpRmnCUV+Ke36oFfIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfS3nOnXhUp/XhJSXhv4o+ZKzky4A/1SXFvxA1jZv8AI9GfVjrSrH+y5p/nJL7Cfb7T9y8Ql9wbyuUznC3TeWzVD2GQusdRq14dHTtJxXl5b99jLjiEYwioxSiktkl5HIAAAAAAfYgX8oJxCucvryhoG366djhYwrXCfh7WvUgpJ/CMJLb3ykT0Ifc93BrIZa8p8RtMY+d1WjR9nl6NJbzcYr6FVLu9l9F+5R9GBCgHr6c0zqDUWXhicHh73IX0+1ChScpfevJfE2NU5a+NUIqT0TcNP7NzRf8AOBqIG063L1xlpfW0Hk3+z0S/gzqXHAni9Qoyq1OH+c6Yrd9Nv1P8EBrcHaymPvsXfVbHJWdezuqT6alGtBwnB+jT8UdUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5j3RbNwQVBcG9GO3io03grPpS/wMCpldy1PlqvPn3ATRdfZrbE0aXj+ouj+UDYgAAAAAAABxKMZLaSTXozkAdO0xWMtLqrdWuOtKFett7WrToxjKe3bdpbs7gAAbIADXWvOCfDXXGdec1Lpujd5CVONOVaNWdNyS7b9LW728N2YdqLlS4P5LG1Lazwtzi67X0Li2upuUX8JNp/gb2Otk760xtjWvb+5pW1tRg51atWajGEV3bb7ICq/jvwwyvCnXE9O5KvTuqVSkrizuYeCrUXJpNr9F7xaa93oYAbz5yuJunuJXES0r6bhVqWeMtXafO5rZXD65S3iu6j49339DRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAetpDT+U1Vqaw09hbd3F/f1lRo015t+b9Elu2/JJstf4Y6aWj+H2C0uqyr/kyyp28qqWynKK+lLby3e7K8+SWgq3Mnpndb+zjdT/C2q/8AMsvXYAAAAAAAAAAAAAAAAAQ5+Ua1BqCxWnMFbX9ajh76jVqXFCm9lVqQlHbqfmkn27ExjS3N3wqueJ/DyEMT0flnFTlc2kZL88unaVPfybW23vSArQB9LmjUtripQrQlCpTk4zjJbNNd0z5gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABsHlz1Beaa436RyFlNRlPJ0bWpuvB060lSmv8ANmy1aP1UVF8L4VavEvS1Oh+dlmbRQ+LrQ2LdI9kByAAAAAAAAAAAAAAAAH2YAEAOe3hS9LayhrnE2/Ric3UauYwX0aN14t/dNJyXvUvcRmLDPlC//Iah/wC92/8A+uqV5gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABs3lYxlPL8wmjLSrt0wyKufHzdGMqq/fBFpa7FUHL/XubfjhompaVJU6rzlpDeL8emVWMZL4OLa+8tfXYAAAAAAAAAAAAAAAAAfmrUhSpyqVJKMYxcpNvZJLzP0aS5xeJVtoThVeWNCttmM3SnZ2kIy2lGLW1Sp8FF/i0BG3nI492PEHp0VpiCqYOyulWq3s47SuasVKK6F5QXU/Hu/cu8Zjltt7vucAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABvzkc0Lbav4w0cnc3sqEdOqnkYUox3daamlFbvsk9myxxdirjlu4sz4Q62rZyWL/KVrd2ztbmkp9E1ByjLqi+26cez77+RNHl55ibLi5qzIYClp6tipWttK5pVJ11U9pBSUdmkls/pJ+YG9gAAAAAAAAAAAAAAAdfJXtrjrCvf3teFC1t6cqtarN7RhCK3cm/JJIq65j+JVxxO4m32bjOosZRbt8dSl4dNGL8JbeTl9Z/HbyJS/KF67yWC0diNHY2r7KGdlVnezi9pOjS6NqfwlKXj+zt5sgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcxW8kiwvk04Jw0Fg6GtsjfVK2YzWPg/m6SVO3pT6Zperlso7vw27beZXzZUKtzeUbahCVSrVqRhCMVu5Sb2SS9S4fC2sbLD2VnCPTG3t4UkvRRil/uA7YAAAAAAAAAAAAAYxxH13pnh/p6rm9T5KnZ20d1CL8alaX2IR7yf/wDPY7+tc1PTulcjm6eNu8nOzoSqxtLSHXVrNfoxRV5xv4j6n4k6yr5TUTqUFSk6dtYeKhaw3+qk/P1fdv7gO3zEcT7virxCrZ+dKpbWFKCt7C2nJN0qS9dvDqbbb+O3kjW4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9QjKc1CKcpSeySXiz8m4OULRK1txsxVC4pqdjjW8hdJ9nGm10r75OKA31yi8t08XWx/EDXVBxvoNV8bjZrb2L7xqVV9rzUfLu/HwUvktlscRSUUl2OQAAAAAAAAAAAAADiSTWzNY8X+BmgOJdGdXL4tWmU22hkbNKnWXh4dXhtNe6Sfu2NngCrbmH4PZfhDqehj7q5/KGOvIOpZX0abgqiT2lCS8dpLdbrd+DTNYE3/AJQnWmka2lrPRHXG71FRvIXSVN/2JDpafW/WSl9X4P03hAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2Zy5a61loniDby0ZZQyF1kXG2rWboe0deDkn0rbxT8N90128fA1mbf5P8AOzwHHvT1SNj87V5UlZNdG8qaqLbrXpt5+7cCzW2lOdvTnOHROUU5R9H6H0OI9jkAAAAAAAAAAAAAAAACtbnW01l8Nx4zeRvLe4+Y5OcLi0uZx+hUXs4pxi+z6WmtvcjSBbfxR0NheIWjr3TWbt4To3FN+zq9Kc6FT9GpB+TT/Ht2ZVdxC0vkNF6zymmMpDpusfcSoye2ymu8Zr3STTXuYHggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiyblX4R6K0xoPTOr7TE056hv8AE0q1e+nUlN/12Km1FN9MfBqPgk9l8StldyxvkZ1nl9W8Ho22To0I08HWjjbWdNNOdOFOLXV70mluBv0AAAAAAAAAAAAAAAAA4lJRW7eyXdgclfHyhtrb0ONtnVo0oQqV8PSnVlFbOclOok379kl9xPd5zCrvl8ev/qYf8yAvygGVw2X4s425w+Vssh7PFxo13bV41FTnGpN9LcW0ns+wEcQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZjwo4cam4lamp4TTdm6kvCVxcTTVK3h9qcvL3Lu/Ik/iuSKh+T5/lPXU/njX0fm9kvZxfv6pbv9wEP9OYfIagztlhcVbyub69rwoUKUe8pyeyX/yWo8EeHuM4Z8PbDTGP2nUgva3lfbZ168kuufw8NkvJJI1xy/cs+D4X6iWpbzLzzeWp05U6EpUVTpUerwcordvq23W+/Zs38AAAAAAAAAAAAAAAAAOtlrKlksXdY+vKcaVzRnRm4PaSUk09n5PxOyAKq+OfDHU3C/VtXG5enWnY1pylYXq39ncU9/B7+Uktt4918Gm9eNtvdtv4ltnFXQeB4i6QutOZ+2VSjVXVSqxS9pQqL6s4Pya/et0+5WTxo4bZzhfrOtp7MxVSLXtbW5h9SvSb2Ul6Pw2a8n+IGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABsfgZwg1NxXz0rPDwVDH2zi72+qL6FCL8v1pPZ7JffsvECYnyfXzapwRq1KePoW9aOSq06leMfpV9lFpyfntvt9xI0w/g/w+xHDTRNtpfDVK1WjSk6lSrVe8qlSX1pP0+BmAAAAAAAAAAAAAAAAAAAAAAAIefKUWVP8AJekMgqC9oq1xRdXbx2cYvp3+7cmGRx+UIxlO74IUL+WyqWOUpSi/2lKLX7wK9QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN/8p/ASrxOyVTN6ipXFvpe1bh1QfRK7q/Zg/Rd2/gvgGgUm2kk235IsV5EtE5fSHCS4uc5YzsrrMXvzunTqLaao+zhGDkvLdqT2fk0d3Q3Kzwx0pq2lqGhQv8hKh9KhbX1WNSlTnv4S22W7XlvujekUopJLsByAAAAAAAAAAAAAAAAAAAAAAAAR35+tQ2uL4L/ke5xta6ll7qNOjWi0o284NT6n67pNJfEkQeVqjTuD1Rip4rUOLtclZTak6NxTUo7rs/iBT4C1L/sM4Rf3gYT/AEH/AMnzr8BuENam4S0Dhkn9mk0/xTAqxBZlf8sHBe7bf9SaoN/3G7qx/mPGuuUXg9W/N2OVofsX8v8AfuBXMCwS55M+F9X81kdQUP2bmD/jA8255J9CTX/h9UagpP8AW9lL+UCBoJzw5JNKxqRctZZiUU92vY01uvTsdHmr5fNB6Y4OV9SaVxzx19hlT62qrl85hKcYPr6n4yTknuveBCYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC8XsDu4Opa0szZVb6Mp2sK8JVox7uCkupL7twN88s3Lhl+IN5b5/VFKvjdLxamt/o1b39WHpH1l+HqrBcHisdhMTa4rFWdGysrWmqVChSj0xhFdkkfjTdzjr3A2F5iXTlYVreFS2dNbR9m4px2+49AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+d1Xp21vUuK0lGnTg5yk+ySW7K9OZ7mPuuJdhV0pg8dLH6fjXU6lSrLetdOLfTul4Rjv47ePZePkT31tiKmf0hmMHRuXa1MhZVraNZLf2bnBxUtvduVT8TtDag4e6suNOaitlSuaX0oTi94VoPtOD80/x8mBi4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAfqnGU5xhBNyb2SXdmd8PuD/EXX2OlkdKaar39lGo6TrurTpQ6kt2t5yW/ddiTHKfy1ZbAamran4l4ajRrWUorG2U6sKyc+7qy6W14eCSfnu9vBAbW5MNO6r03wZtbTVcrmFWtXlXtLavLeVvQkl0x2f1d3u9vLc3acRSitkcgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAr2+UB1NSzHGKjhaFOCWGso0alRR+lKc/ptN+iTX7ywk0PzP8v+N4n2EszhvZWOqaFPanWa2hdJdoVNu3ul5AVvg72dxWQweYu8RlbWpaX1pVlRr0ai2lCcXs0zogAAAAAAEq+QvhjpvWNLU2Z1Vg7bKW1s6NtaxuIdUFOSlKbS9Uuj8TONWclWDv8APVbzAavucVY1JuStatmq/s0/0Yy64+Hx3YEUOFfDHWHEvJ17HSmMdy7eKlXqzmoUqSfbqk/Dd+S7+DPa4lcCOJegLSpf5zAVKmPpred5aTValBesnHxj96RYvwe4c4Lhlo2205hIOXR9O5uZxSqXNV95y/gl5JJGW3trb3tpVtLqjTr0K0XCpTqRUozi1s00+6ApuZwWK6t5R+FWYhXqY2hkcLc1N5RlbXDlCMn+pPdbe5bEROYDgXqXhJeUK13Vjk8NdScbe/o03FKX2Jx8emW3ivFp+T8HsGpQAAAOdn6MDgAAAbA4CcN77ihxEstOW7qUrT89f3EV+Zor6zXvfgl72Sj468svDjTHBnM5zA21/SyuJtHcRr1LqUvbdLTl1xfh237JAQcP1CMpyUYptt7JI/JnPAbLaawXFrT+W1fS9phrW6VSuuhzUWk+iTiu6U+lvv4Ls+wFgvKHiL7CcAdO2WSsallcuNSrKlUh0y2lUk4tr3ppm2jr4y6tb/H299ZVY1bW4pRq0ake0oSW6a9zTR2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0rx/5d9KcUp1MtTlLD6jcFFX9KPVGrstkqsP0vDw3WzXh3S2NZ6f5MMFT0XeW2dzlxW1HLr+a3VrLa3p/Y6oOO8vHv4rv4EtgwKedUYW+05qPI4HJ0/Z3uPuZ21eKe6U4ScXs/NeHc80nBzcct+a1XqW613oanQr3VxTjK+xzl0TqzitvaU2/BtpLeL28Vv4t7EKstjchichWx+Tsriyu6E3CrQr03CcGvJp+KA6h7GjdN5bVupLLT2EtJ3V/eVVTpU4/vb9El4t+SR+9IaT1Hq3L0sVp3D3mRu6slFRoUnJR3feT7RXveyLD+WDgRjeFeHWRyKo3mqLuntc3KW8aEX/aqb9PV+fwAy3gDwzseFfD6305a1vnFzOfzi+uOyq15JKTS8opJJL0Xq2bBAAAAAeRrDTeH1Zpy8wGdsqd5j7yDhVpTX4NPyaezTXimtz1wBWzx65c9X8P81WrYWwvM5p+bc6N1QpOc6Ufs1Yx7NevZ9/DstITo1YVHTnSnGaezi4tNP4FykoxktpJNHmPTenndTupYPGu4m95VXawcm/e9gK2uAXAnVXEzPW8qtlc43AQkpXN/WpuKlDfxjT3X0pP8F5k/wCpwh4a1tM09P3Gi8LVs6VuqEHK0h7VRS23VTbrUvPq333M3p0qdOChThGEV4KMVskfsCuHmt4Dz4XZajlMB87u9OXm/TKouqVrP7EpJeKa7N+9eW71JoLSWb1tqqz03gLSVxfXctortGCXeUn5RS8Wy3K/srS/talrfW1K5t6kemdKrBSjJejT8GY3o/hzojSGUvMnprTePxd1eJRrVLen07peS+yvctgMV5deDOG4SaclRozV5mryK+f3rjt1NdoQ9IL9/d+74c3lSg+Auo7WeoKGGqVaH9bdSaXzjpak6KXduaTj4evpueXzO8ecbwqxf5MxvsL7U9zDqoW0nvGhF/2ypt5ekfP4FfvEHXmq9eZiWU1TmLjIV+0Ize1OmvSEF4RXwQGMvuZbwv4f6m4iaijhtM46d3WilOvPdRhRp7pOUm/BLx+LMSJQ8hHEvA6V1NkNI5uNG2lnalL5peuPj7aO6VKUvSW/0fR7+oE5NKYxYTTGLwyqOqrG0pWym1t1dEFHf9x6YTTW6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaMO1twv0DrTJ2mS1PpiwyV3aPelVqRabX2ZbNdcfdLdGYgDpYfE4vD2MLHE460sLWmto0bajGnCPwUUkd0AAAAAAAAAAAAAAAAACG/OJy/6y1RritrjSNH8rq8jTp3FlFqNWk4xUVJbvaUXt8UaHhy5cZ5dtDXy+NSmv5i0BpPyGyArGhy08aZ/+i66+NxSX8x38Tyz8bKORtq8NLOhKnVjNVPnlJOLTT3+t5FlWyAHxsYVYWdGFeXXVjTipy9ZbeLPsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/9k=" alt="Mapa Mato Grosso" class="mt-map-img"/>
 
-        <!-- Labels HTML clicáveis posicionados sobre o mapa -->
-        <!-- Posições em % relativas ao tamanho do container -->
-
+        <!-- Pins clicáveis posicionados sobre o mapa real -->
         <button class="city-pin" style="left:29%;top:50%;" onclick="openCity('tangara')">
           <span class="pin-dot"></span>
           <span class="pin-label">Tangará da Serra<span class="pin-sub">2 emissoras</span></span>
@@ -941,32 +933,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ── TOUCH / CLICK BINDINGS para as cidades no mapa ────────────
-// Suporte a touch (mobile) e click (desktop)
-const cityMap = {
-  'dot-rondonopolis': 'rondonopolis',
-  'dot-primavera':    'primavera',
-  'dot-tangara':      'tangara',
-  'dot-barra':        'barra'
-};
-
-Object.entries(cityMap).forEach(([elId, cityKey]) => {
-  const el = document.getElementById(elId);
-  if (!el) return;
-
-  // Click (desktop)
-  el.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openCity(cityKey);
-  });
-
-  // Touch (mobile) — evita delay de 300ms
-  el.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    openCity(cityKey);
-  }, { passive: false });
-});
+// City pins now use native onclick buttons — no extra JS needed
 </script>
 </body>
 </html>
