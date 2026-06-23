@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grupo Agora — Acesso Gerencial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0d;
+      --surface:   #161616;
+      --border:    #2a2a2a;
+      --red:       #c0141c;
+      --red-hover: #e01820;
+      --text:      #f0f0f0;
+      --muted:     #888;
+      --radius:    14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .logo {
+      width: 160px;
+      margin-bottom: 32px;
+      filter: drop-shadow(0 0 18px rgba(192,20,28,0.35));
+    }
+
+    .welcome {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .welcome strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: 0.01em;
+    }
+
+    .cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      width: 220px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      border-color: var(--red);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 28px rgba(192,20,28,0.25);
+    }
+
+    .card .icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .card .city {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .card .state {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card .tag {
+      display: inline-block;
+      margin-top: 16px;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 99px;
+    }
+
+    .divider {
+      width: 1px;
+      height: 80px;
+      background: var(--border);
+      align-self: center;
+    }
+
+    footer {
+      margin-top: 48px;
+      font-size: 0.72rem;
+      color: #444;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 520px) {
+      .divider { display: none; }
+      .cards { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <img
+    src="https://tvcidaderecord.github.io/visitas_bga/Logo-Grupo-Agora-Png-400-300.png"
+    alt="Grupo Agora Comunicação"
+    class="logo"
+  />
+
+  <p class="welcome">Olá, <strong>Thiago</strong> — seja bem-vindo!</p>
+  <h1>Escolha qual cidade deseja ver as visitas</h1>
+
+  <div class="cards">
+
+    <a class="card" href="https://tvcidaderecord.github.io/visitas_bga/gerente.html" target="_blank" rel="noopener">
+      <span class="icon">📡</span>
+      <div class="city">Barra do Garças</div>
+      <div class="state">Mato Grosso — BGA</div>
+      <span class="tag">Abrir Painel</span>
+    </a>
+
+    <div class="divider"></div>
+
+    <a class="card" href="https://tvcidaderecord.github.io/visitas_pva/gerente.html" target="_blank" rel="noopener">
+      <span class="icon">📡</span>
+      <div class="city">Primavera do Leste</div>
+      <div class="state">Mato Grosso — PVA</div>
+      <span class="tag">Abrir Painel</span>
+    </a>
+
+  </div>
+
+  <footer>Grupo Agora Comunicação &mdash; Acesso Restrito</footer>
+
+</body>
+</html>
